@@ -1,13 +1,14 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
 
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: '*' }));
+app.use(express.static('public'));
 
-app.get("/", (req, res) => {
-  res.json({ relatable: "isOnline" });
+app.get('/test', (req, res) => {
+  res.json({ relatable: 'isOnline' });
 });
 
 const port = process.env.PORT || 3000;
