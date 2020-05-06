@@ -7,8 +7,8 @@ app.use(express.json());
 app.use(cors({ origin: '*' }));
 app.use(express.static('public'));
 
-app.get('/test', (req, res) => {
-  res.json({ relatable: 'isOnline' });
+app.get('/api/generate-report', (req, res) => {
+  res.send({ yolo: 'swag' });
 });
 
 const port = process.env.PORT || 3000;
