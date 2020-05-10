@@ -3,6 +3,7 @@
 	Database for Relatable - A Facebook Clone
 
 */
+drop database if exists relatable;
 
 create database relatable;
 
@@ -10,12 +11,12 @@ use relatable;
 
 /*Entities */
 
-create table Users(
-	user_id mediumint not null AUTO_INCREMENT,
+create table users(
+	user_id int not null AUTO_INCREMENT,
 	fname varchar(20) not null,
 	lname varchar(30) not null,
 	password varchar(20) not null,
-	email varchar(40) not null,
+	email varchar(50) not null,
 
 	primary key(user_id)
 );
@@ -23,105 +24,105 @@ create table Users(
 
 /* Weak Entities*/
 
-create table Profile(
-	user_id mediumint,
+create table profile(
+	user_id int,
 	profile_photo varchar(250), /* stores the url*/
 	status varchar(250),
 	primary key(user_id),
-	foreign key(user_id) references Users(user_id) on delete cascade
+	foreign key(user_id) references users(user_id) on delete cascade
 );
 
-create table Posts(
-	post_id mediumint not null AUTO_INCREMENT,
-	user_id mediumint,
+create table posts(
+	post_id int not null AUTO_INCREMENT,
+	user_id int,
 	created_on date not null,
 	primary key(post_id,user_id),
-	foreign key(user_id) references Users(user_id) on delete cascade
+	foreign key(user_id) references users(user_id) on delete cascade
 );
 
 
-create table Photos(
-	post_id mediumint,
+create table photos(
+	post_id int,
 	url varchar(250) not null,
 	caption varchar(250),
 	primary key(post_id),
-	foreign key(post_id) references Posts(post_id) on delete cascade
+	foreign key(post_id) references posts(post_id) on delete cascade
 );
 
-create table Texts(
-	post_id mediumint,
+create table texts(
+	post_id int,
 	body varchar(250) not null,
 	primary key(post_id),
-	foreign key(post_id) references Posts(post_id) on delete cascade
+	foreign key(post_id) references posts(post_id) on delete cascade
 );
 
 
-create table Groups(
-	group_id mediumint not null AUTO_INCREMENT,
-	user_id mediumint,
+create table groups(
+	group_id int not null AUTO_INCREMENT,
+	user_id int,
 	name varchar(50) not null,
 	primary key(group_id,user_id),
-	foreign key(user_id) references Users(user_id) on delete cascade
+	foreign key(user_id) references users(user_id) on delete cascade
 );
 
 /* Relationships*/
 
 create table comments_on(
-	user_id mediumint,
-	post_id mediumint,
+	user_id int,
+	post_id int,
 	comment varchar(250) not null,
 	c_date date not null,
 	primary key(user_id,post_id),
-	foreign key(user_id) references Users(user_id) on delete cascade,
-	foreign key(post_id) references Posts(post_id) on delete cascade
+	foreign key(user_id) references users(user_id) on delete cascade,
+	foreign key(post_id) references posts(post_id) on delete cascade
 );
 
 
 create table friend_of(
-	user_id mediumint,
-	friend_id mediumint,
+	user_id int,
+	friend_id int,
 	group_t varchar(10) not null,
 	primary key(user_id,friend_id),
-	foreign key(user_id) references Users(user_id) on delete cascade,
-	foreign key(friend_id) references Users(user_id) on delete cascade
+	foreign key(user_id) references users(user_id) on delete cascade,
+	foreign key(friend_id) references users(user_id) on delete cascade
 );
 
-create table joinedGroup(
-	user_id mediumint,
-	group_id mediumint,
+create table joined_group(
+	user_id int,
+	group_id int,
 	role varchar(15) not null,
 	primary key(user_id,group_id),
-	foreign key(user_id) references Users(user_id) on delete cascade,
-	foreign key(group_id) references Groups(group_id) on delete cascade
+	foreign key(user_id) references users(user_id) on delete cascade,
+	foreign key(group_id) references groups(group_id) on delete cascade
 );
 
 
 create table makes(
-	user_id mediumint,
-	post_id mediumint,
+	user_id int,
+	post_id int,
 	primary key(user_id,post_id),
-	foreign key(user_id) references Users(user_id) on delete cascade,
-	foreign key(post_id) references Posts(post_id) on delete cascade
+	foreign key(user_id) references users(user_id) on delete cascade,
+	foreign key(post_id) references posts(post_id) on delete cascade
 );
 
 
-create table postsMade(
-	post_id mediumint,
-	user_id mediumint,
-	group_id mediumint,
+create table posts_made(
+	post_id int,
+	user_id int,
+	group_id int,
 	primary key(post_id,user_id,group_id),
-	foreign key(post_id) references Posts(post_id) on delete cascade,
-	foreign key(user_id) references Users(user_id) on delete cascade,
-	foreign key(group_id) references Groups(group_id) on delete cascade
+	foreign key(post_id) references posts(post_id) on delete cascade,
+	foreign key(user_id) references users(user_id) on delete cascade,
+	foreign key(group_id) references groups(group_id) on delete cascade
 );
 
 
 create table creates(
-	user_id mediumint,
-	group_id mediumint,
+	user_id int,
+	group_id int,
 	primary key(user_id,group_id),
-	foreign key(user_id) references Users(user_id) on delete cascade,
-	foreign key(group_id) references Groups(group_id) on delete cascade
+	foreign key(user_id) references users(user_id) on delete cascade,
+	foreign key(group_id) references groups(group_id) on delete cascade
 );
 
 
@@ -131,7 +132,7 @@ create table creates(
 
  create procedure register(f_name varchar(20), l_name varchar(30), password varchar(20), email varchar(40))
  	BEGIN
- 		insert into Users(fname,lname,password,email) values(f_name,l_name,password,email);
+ 		insert into users(fname,lname,password,email) values(f_name,l_name,password,email);
  	END $$
 
  DELIMITER ;
@@ -142,10 +143,10 @@ create table creates(
 DELIMITER $$
 
 create trigger createProfile
-	after insert ON Users
+	after insert ON users
 	FOR EACH ROW
 	BEGIN
-		insert into Profile(user_id) values (new.user_id);
+		insert into profile(user_id) values (new.user_id);
 	END $$
 
 DELIMITER ;
@@ -153,28 +154,28 @@ DELIMITER ;
 /*Stored Procedures to modify a profile*/
 DELIMITER $$
 
-create procedure modifyProfilePhoto(uid mediumint, photo_url varchar(250))
+create procedure modifyProfilePhoto(uid int, photo_url varchar(250))
 	BEGIN
-		update Profile
+		update profile
 			set profile_photo = photo_url
 			where user_id = uid;
 	END $$
 
-create procedure modifyProfileStatus(uid mediumint, p_status varchar(250))
+create procedure modifyProfileStatus(uid int, p_status varchar(250))
 	BEGIN
-		update Profile
+		update profile
 			set status = p_status
 			where user_id = uid;
 	END $$
 
-create procedure deleteProfile(uid mediumint)
+create procedure deleteProfile(uid int)
 	BEGIN
-		DELETE FROM Profile WHERE user_id = uid;
+		DELETE FROM profile WHERE user_id = uid;
 	END $$
 
-create procedure deleteUser(uid mediumint)
+create procedure deleteUser(uid int)
 	BEGIN
-		DELETE FROM Users WHERE user_id = uid;
+		DELETE FROM users WHERE user_id = uid;
 	END $$
 
 DELIMITER ;
@@ -183,14 +184,14 @@ DELIMITER ;
 /* Stored Procedures to add a friend*/
 DELIMITER $$
 
-create procedure addFriend(uid mediumint,fid mediumint,type varchar(10))
+create procedure addFriend(uid int,fid int,type varchar(10))
 	BEGIN
 		insert into friend_of values (uid,fid,type);
 		insert into friend_of values (fid,uid,type);
 	END $$
 
 
-create procedure unfriend(uid mediumint, fid mediumint)
+create procedure unfriend(uid int, fid int)
 	BEGIN
 		DELETE FROM friend_of WHERE user_id = uid AND friend_id = fid;
 		DELETE FROM friend_of WHERE user_id = fid AND friend_id = uid;
@@ -201,7 +202,7 @@ DELIMITER ;
 /*Stored Procedure to return list of userids that are friends of a user*/
 DELIMITER $$
 
-create procedure friendList(id mediumint)
+create procedure friendList(id int)
 	BEGIN
 		SELECT friend_id
 		FROM friend_of
@@ -213,10 +214,10 @@ DELIMITER ;
 /*Stored Procedure to return info for friend*/
 DELIMITER $$
 
-create procedure friendInfo(id mediumint)
+create procedure friendInfo(id int)
 	BEGIN
 		SELECT user_id,fname,lname
-		FROM Users
+		FROM users
 		WHERE user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id = id);
 	END $$
 
@@ -226,26 +227,26 @@ DELIMITER ;
 /* Stored Procedure to create a post*/
 DELIMITER $$
 
-create procedure makePhotoPost(uid mediumint, url varchar(250), caption varchar(250))
+create procedure makePhotoPost(uid int, url varchar(250), caption varchar(250))
 	BEGIN
-		insert into Posts(user_id,created_on) values (uid,CURRENT_DATE());
-		insert into Photos values (LAST_INSERT_ID(),url,caption);
+		insert into posts(user_id,created_on) values (uid,CURRENT_DATE());
+		insert into photos values (LAST_INSERT_ID(),url,caption);
 	END $$
 
-create procedure makeTextPost(uid mediumint, body varchar(250))
+create procedure makeTextPost(uid int, body varchar(250))
 	BEGIN
-		insert into Posts(user_id,created_on) values (uid,CURRENT_DATE());
-		insert into Texts values (LAST_INSERT_ID(),body);
+		insert into posts(user_id,created_on) values (uid,CURRENT_DATE());
+		insert into texts values (LAST_INSERT_ID(),body);
 	END $$
 
-create procedure deletePost(pid mediumint)
+create procedure deletePost(pid int)
 	BEGIN
-		DELETE  from Posts where post_id = pid;
+		DELETE  from posts where post_id = pid;
 	END $$
 
-create procedure listPosts(uid mediumint)
+create procedure listPosts(uid int)
 	BEGIN
-		SELECT post_id FROM Posts WHERE user_id = uid;
+		SELECT post_id FROM posts WHERE user_id = uid;
 	END $$
 
 
@@ -254,36 +255,36 @@ DELIMITER ;
 /*Stored Procedure to create a group*/
 DELIMITER $$
 
-create procedure makeGroup(uid mediumint, gname varchar(50))
+create procedure makeGroup(uid int, gname varchar(50))
 	BEGIN
-		insert into Groups(user_id,name) values(uid,gname);
-		insert into joinedGroup values(uid,LAST_INSERT_ID(),"editor");
+		insert into groups(user_id,name) values(uid,gname);
+		insert into joined_group values(uid,LAST_INSERT_ID(),"editor");
 	END $$
 
 /*Stored Procedure to join a group*/
-create procedure joinGroup(uid mediumint,gid mediumint)
+create procedure joinGroup(uid int,gid int)
 	BEGIN
-		insert into joinedGroup values(uid,gid,"viewer");
+		insert into joined_group values(uid,gid,"viewer");
 	END $$
 
 /*Stored Procedure to make someone a content editor*/
-create procedure changeRole(creator mediumint,uid mediumint, gid mediumint)
+create procedure changeRole(creator int,uid int, gid int)
 	BEGIN
-		update joinedGroup
+		update joined_group
 		set role = CASE
-		when (role = "viewer" and creator = (SELECT user_id FROM Groups WHERE group_id = gid)) then "editor"
+		when (role = "viewer" and creator = (SELECT user_id FROM groups WHERE group_id = gid)) then "editor"
 		else role
 		end
-		where joinedGroup.user_id = uid;
+		where joined_group.user_id = uid;
 
 	END $$
 
 /*Procedure to list all members of a group*/
-create procedure listGroupMembers(gid mediumint)
+create procedure listGroupMembers(gid int)
 	BEGIN
 		SELECT user_id,fname,lname
-		FROM Users
-		WHERE user_id in (SELECT user_id FROM joinedGroup WHERE joinedGroup.group_id = gid);
+		FROM users
+		WHERE user_id in (SELECT user_id FROM joined_group WHERE joined_group.group_id = gid);
 	END $$
 
 DELIMITER ;
@@ -291,17 +292,17 @@ DELIMITER ;
 /*Procedure to comment on a post*/
 DELIMITER $$
 
-create procedure leaveComment(uid mediumint,pid mediumint,comment varchar(250))
+create procedure leaveComment(uid int,pid int,comment varchar(250))
 	BEGIN
 		insert into comments_on values(uid,pid,comment,CURRENT_DATE());
 	END $$
 
-create procedure viewComments(pid mediumint)
+create procedure viewComments(pid int)
 	BEGIN
 		SELECT user_id,comment FROM comments_on WHERE post_id = pid;
 	END $$
 
-create procedure deleteComments(pid mediumint,uid mediumint)
+create procedure deleteComments(pid int,uid int)
 	BEGIN
 		DELETE FROM comments_on WHERE post_id = pid AND user_id = uid;
 	END $$
