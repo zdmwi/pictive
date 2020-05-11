@@ -35,7 +35,7 @@ create table profile(
 create table posts(
 	post_id int not null AUTO_INCREMENT,
 	user_id int,
-	created_on date not null,
+	created_on datetime not null,
 	primary key(post_id,user_id),
 	foreign key(user_id) references users(user_id) on delete cascade
 );
@@ -68,11 +68,12 @@ create table groups(
 /* Relationships*/
 
 create table comments_on(
+	comment_id int not null AUTO_INCREMENT,
 	user_id int,
 	post_id int,
 	comment varchar(250) not null,
-	c_date date not null,
-	primary key(user_id,post_id),
+	c_date datetime not null,
+	primary key(comment_id, user_id,post_id),
 	foreign key(user_id) references users(user_id) on delete cascade,
 	foreign key(post_id) references posts(post_id) on delete cascade
 );
@@ -229,13 +230,13 @@ DELIMITER $$
 
 create procedure makePhotoPost(uid int, url varchar(250), caption varchar(250))
 	BEGIN
-		insert into posts(user_id,created_on) values (uid,CURRENT_DATE());
+		insert into posts(user_id,created_on) values (uid, NOW());
 		insert into photos values (LAST_INSERT_ID(),url,caption);
 	END $$
 
 create procedure makeTextPost(uid int, body varchar(250))
 	BEGIN
-		insert into posts(user_id,created_on) values (uid,CURRENT_DATE());
+		insert into posts(user_id,created_on) values (uid, NOW());
 		insert into texts values (LAST_INSERT_ID(),body);
 	END $$
 
@@ -294,7 +295,7 @@ DELIMITER $$
 
 create procedure leaveComment(uid int,pid int,comment varchar(250))
 	BEGIN
-		insert into comments_on values(uid,pid,comment,CURRENT_DATE());
+		insert into comments_on(user_id, post_id, comment, c_date) values(uid,pid,comment,NOW());
 	END $$
 
 create procedure viewComments(pid int)
@@ -305,6 +306,11 @@ create procedure viewComments(pid int)
 create procedure deleteComments(pid int,uid int)
 	BEGIN
 		DELETE FROM comments_on WHERE post_id = pid AND user_id = uid;
+	END $$
+
+create procedure deleteComment(cid int)
+	BEGIN
+		DELETE FROM comments_on WHERE comment_id = cid;
 	END $$
 
 DELIMITER ;
