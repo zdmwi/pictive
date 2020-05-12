@@ -1,5 +1,6 @@
 import express from 'express'
 import mysql from 'mysql'
+import bodyParser from 'body-parser'
 
 const connection = mysql.createConnection({
   host: process.env.MYSQL_HOST || 'localhost',
@@ -18,6 +19,8 @@ const router = express.Router()
 // Transform req & res to have the same API as express
 // So we can use res.status() & res.json()
 const app = express()
+// app.use(bodyParser.json())
+router.use(bodyParser.json())
 router.use((req, res, next) => {
   Object.setPrototypeOf(req, app.request)
   Object.setPrototypeOf(res, app.response)
@@ -89,7 +92,6 @@ router.get('/users/:id/texts', (req, res) => {
 router.post('/users/:id/texts', (req, res) => {
   const { id } = req.params
   const { body } = req.body
-  console.log('text body: ', body)
 
   const sql = `call makeTextPosts(${id}, ${body})`
 
