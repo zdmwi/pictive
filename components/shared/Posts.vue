@@ -1,20 +1,19 @@
 <template>
-    <div class="flex flex-1 content-start w-full h-32 bg-white shadow-sm rounded-lg mb-4">
-        <div class="h-32 lg:h-auto lg:w-34 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden">
-            <img class="rounded-lg h-32 w-34" :src="url"> 
+    <div class="rounded-lg bg-white h-auto overflow-hidden shadow-lg mb-4">
+        <div class="flex justify-start px-6 pt-4">
+            <div class="bg-gray-300 h-12 w-12 rounded-full cursor-pointer"></div>
+            <p class="text-gray-900 text-sm leading-none pl-4 pt-4">Jonathan Reinink</p>
+            <p class="text-xs justify end ml-auto pt-4">{{date}}</p>
         </div>
-        <div class="p-4 flex flex-col justify-between leading-normal">
-            <div class="mb-4">
-                <p class="text-gray-700 text-sm">{{caption}}</p>
-            </div>
-            <div class="flex items-end justify-end">
-                <img class="w-10 h-10 rounded-full mr-4" src="/img/jonathan.jpg" alt="Avatar of Jonathan Reinink">
-                <div class="text-sm">
-                    <p class="text-gray-900 text-sm leading-none">Jonathan Reinink</p>
-                    <p class="text-gray-600 text-xs">Aug 18</p>
-                </div>
-            </div>
+        <div class="px-6 py-4">
+            <p v-if="caption" class="text-gray-700 text-base">
+            {{caption}}
+            </p>
+            <p v-else class="text-gray-700 text-base">
+            {{body}}
+            </p>
         </div>
+        <img v-if="url" class="w-full" :src="url" alt="Sunset in the mountains">
     </div>
 </template>
 
