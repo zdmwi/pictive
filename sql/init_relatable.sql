@@ -155,6 +155,14 @@ DELIMITER ;
 /*Stored Procedures to modify a profile*/
 DELIMITER $$
 
+create procedure getFriends(IN user_id int, lim int)
+  BEGIN
+    select u.fname, u.lname, u.user_id, u.email, f.group_t as friend_group 
+    from users as u join friend_of as f on u.user_id = f.friend_id
+    where f.user_id=user_id
+    limit lim
+  END $$
+
 create procedure modifyProfilePhoto(uid int, photo_url varchar(250))
 	BEGIN
 		update profile
