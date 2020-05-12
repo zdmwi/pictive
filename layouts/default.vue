@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <Header />
+<div>
+  <Header></Header>
+  <div class="text-white flex justify-center items-center">
     <nuxt />
   </div>
+</div>
 </template>
 
 <script>
