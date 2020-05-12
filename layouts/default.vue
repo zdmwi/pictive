@@ -1,8 +1,9 @@
 <template>
-  <div>
-    <Header />
+<div>
+  <div class="bg-gray-300 w-screen h-screen flex justify-center items-center">
     <nuxt />
   </div>
+</div>
 </template>
 
 <script>
