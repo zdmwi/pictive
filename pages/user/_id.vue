@@ -18,10 +18,9 @@
 import ProfileCard from '@/components/profile/ProfileCard.vue'
 import UserCollection from '@/components/profile/UserCollection.vue'
 import PostForm from '@/components/shared/PostForm.vue'
-import Gallery from '@/components/shared/Gallery.vue'
+import Gallery from '@/components/profile/Gallery.vue'
 
 export default {
-  layout: 'profile',
   validate({ params }) {
     return /^\d+/.test(params.id)
   },
