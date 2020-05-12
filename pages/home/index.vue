@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="flex flex-col px-4 mx-2">
-      <Posts v-for="post in posts"
+      <Posts v-for="post in userPosts"
       v-bind:url="post.url"
       v-bind:caption="post.caption"
       v-bind:body="post.body"
@@ -38,6 +38,19 @@ export default {
   layout: "home",
   components: {
       Posts
+  },
+  computed: {
+    userPosts: function () {
+      this.posts.sort((a, b) => b.id - a.id );
+      for(let i=0; i < this.posts.length; i++){
+        let post = this.posts[i];
+        let p_date = new Date(post.date);
+        p_date.setTime(p_date.getTime()+86400000);
+        post.date = p_date.toString().substring(4, 11);
+        this.posts[i] = post;
+      }
+      return this.posts;
+    }
   },
   data() {
     return {
@@ -85,6 +98,11 @@ export default {
           "id": 8,
           "body": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.",
           "date": "2020-05-01"
+        },
+        {
+          "id": 9,
+          "body": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.",
+          "date": "2020-05-05"
         }
       ],
       groups: [
