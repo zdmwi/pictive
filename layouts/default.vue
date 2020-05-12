@@ -1,7 +1,6 @@
 <template>
 <div>
-  <Header></Header>
-  <div class="text-white flex justify-center items-center">
+  <div class="bg-gray-300 w-screen h-screen flex justify-center items-center">
     <nuxt />
   </div>
 </div>
