@@ -12,11 +12,13 @@
     </div>
     <div class="flex flex-col px-4 mx-2">
       <Posts v-for="post in userPosts"
+      v-bind:p_id="post.id"
       v-bind:url="post.url"
       v-bind:caption="post.caption"
       v-bind:body="post.body"
       v-bind:date="post.date"
-      :key="post.id"></Posts>
+      :key="post.id"
+      ></Posts>
     </div>
     <div class="shadow-md h-64 w-5/12 p-4 bg-white rounded-lg">
       <h5 class="text-gray-800 text-base font-bold">Groups</h5>
