@@ -15,7 +15,18 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      searchString: ''
+    }
+  },
+  methods: {
+    handleSubmitQuery() {
+      console.log(this.searchString)
+    }
+  }
+}
 </script>
 
 <style>
