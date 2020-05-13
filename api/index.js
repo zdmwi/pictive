@@ -93,7 +93,23 @@ router.post('/users/:id/texts', (req, res) => {
   const { id } = req.params
   const { body } = req.body
 
-  const sql = `call makeTextPosts(${id}, ${body})`
+  const sql = `call makeTextPost(${id}, '${body}')`
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
+// make a photo post
+router.post('/users/:id/photos', (req, res) => {
+  const { id } = req.params
+  const { url, caption } = req.body
+
+  const sql = `call makePhotoPost(${id}, '${url}', '${caption}')`
 
   connection.query(sql, (error, results) => {
     if (error) throw error
@@ -108,7 +124,6 @@ router.post('/users/:id/texts', (req, res) => {
 router.get('/users/:id/comments', (req, res) => {
   const { id } = req.params
 
-  // friend_of, user i want all comments whre id = user's
   const sql = `select c.comment, c.c_date, c.post_id from comments_on as c where user_id=${id} `
 
   connection.query(sql, (error, results) => {
@@ -116,6 +131,37 @@ router.get('/users/:id/comments', (req, res) => {
     return res.json({
       code: 1,
       data: results
+    })
+  })
+})
+
+// User comments on a post
+router.post('/users/:id/comments', (req, res) => {
+  const { id } = req.params
+  const { post_id, comment } = req.body
+
+  const sql = `call leaveComment(${id}, ${post_id}, '${comment}')`
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
+// get a post's comments
+router.get('/posts/:id/comments', (req, res) => {
+  const { id } = req.params
+
+  const sql = `call viewComments(${id})`
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results[0]
     })
   })
 })
