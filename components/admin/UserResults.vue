@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <div v-if="!focusedUser">
       <div
-        v-for="user in users"
+        v-for="user in filteredUsers"
         @click="focusUser(user)"
         class="shadow-md rounded-lg mb-2 p-4 bg-white hover:shadow-lg hover:bg-gray-200 cursor-pointer w-auto"
       >{{ user.fname }}, {{ user.lname }}</div>
@@ -25,19 +25,47 @@
         </div>
       </div>
       <div class="flex flex-col">
-        <h1>Recent Posts:</h1>
-        <div class="flex flex-col"></div>
+        <h1 class="font-bold my-2">Recent Posts:</h1>
+        <div class="flex flex-col">
+          <div v-for="post in focusedUser.posts" class="flex h-24 shadow-md bg-white mb-4">
+            <img class="h-24 w-24" :src="post.url" />
+            <div class="flex flex-col p-4">{{ post.caption }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <h1 class="font-bold my-2">Recent Comments:</h1>
+        <div class="flex flex-col">
+          <div
+            v-for="comment in focusedUser.comments"
+            class="flex flex-col h-24 shadow-md bg-white mb-4 p-4 rounded-lg"
+          >
+            <span>{{ comment.comment }}</span>
+            <small class="text-gray-500">{{ formatDate(comment.c_date) }}</small>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { formatRelative } from 'date-fns'
+
 export default {
   props: {
-    users: Array
+    users: Array,
+    searchString: String
   },
   computed: {
+    filteredUsers() {
+      if (this.searchString) {
+        return this.users.filter(user =>
+          `${user.fname} ${user.lname}`.includes(this.searchString)
+        )
+      }
+      return this.users
+    },
     previousBtnText() {
       const lastUser = this.previousUsers[this.previousUsers.length - 1]
       if (lastUser !== null) {
@@ -53,28 +81,31 @@ export default {
     }
   },
   methods: {
+    formatDate(date) {
+      return formatRelative(new Date(date), new Date())
+    },
     async focusUser(user) {
       try {
         const profileUrl = `/api/users/${user.user_id}/profile`
         const friendsUrl = `/api/users/${user.user_id}/friends`
-        const textPostsUrl = `/api/users/${user.user_id}/texts`
-        const photoPostsUrl = `/api/users/${user.user_id}/photos`
+        const postsUrl = `/api/users/${user.user_id}/posts`
+        const commentsUrl = `/api/users/${user.user_id}/comments`
 
         const profileResult = await this.$axios.$get(profileUrl)
         const friendsResult = await this.$axios.$get(friendsUrl)
-        const postsResult = await this.$axios.$get(textPostsUrl)
-        const photosResult = await this.$axios.$get(photoPostsUrl)
+        const postsResult = await this.$axios.$get(postsUrl)
+        const commentsResult = await this.$axios.$get(commentsUrl)
 
         this.previousUsers.push(this.focusedUser)
         this.focusedUser = {
           ...user,
           ...profileResult.data[0],
-          friends: friendsResult.data
+          friends: friendsResult.data,
+          posts: postsResult.data,
+          comments: commentsResult.data
         }
 
         console.log(this.focusedUser)
-
-        console.log(postsResult, photosResult)
       } catch (e) {
         console.log(e)
       }
@@ -85,20 +116,22 @@ export default {
         const url = `/api/users/${friend.user_id}`
         const profileUrl = `/api/users/${friend.user_id}/profile`
         const friendsUrl = `/api/users/${friend.user_id}/friends`
-        const textPostsUrl = `/api/users/${friend.user_id}/texts`
-        const photoPostsUrl = `/api/users/${friend.user_id}/photos`
+        const postsUrl = `/api/users/${friend.user_id}/posts`
+        const commentsUrl = `/api/users/${friend.user_id}/comments`
 
         const userResult = await this.$axios.$get(url)
         const profileResult = await this.$axios.$get(profileUrl)
         const friendsResult = await this.$axios.$get(friendsUrl)
-        const postsResult = await this.$axios.$get(textPostsUrl)
-        const photosResult = await this.$axios.$get(photoPostsUrl)
+        const postsResult = await this.$axios.$get(postsUrl)
+        const commentsResult = await this.$axios.$get(commentsUrl)
 
         this.previousUsers.push(this.focusedUser)
         this.focusedUser = {
           ...userResult.data[0],
           ...profileResult.data[0],
-          friends: friendsResult.data
+          friends: friendsResult.data,
+          posts: postsResult.data,
+          comments: commentsResult.data
         }
       } catch (e) {
         console.log(e)
