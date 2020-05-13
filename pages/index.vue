@@ -48,11 +48,10 @@ export default {
       const { password } = this.password
       try {
         const url = '/api/login'
-        this.results = this.$axios.$post(url, {
+        this.results = await this.$axios.$post(url, {
           username: username,
           password: password
         })
-        console.log(results)
       } catch (e) {
         console.log(e)
       }

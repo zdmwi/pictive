@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-full w-full">
     <ControlPanel @submit-query="handleSubmitQuery" @replay-submit-query="handleReplaySubmitQuery" />
-    <ResultsPanel :searchString="searchString" :results="results" />
+    <ResultsPanel :queryType="queryType" :searchString="searchString" :results="results" />
   </div>
 </template>
 
@@ -18,6 +18,7 @@ export default {
   data() {
     return {
       searchString: '',
+      queryType: '',
       results: null
     }
   },
@@ -25,10 +26,11 @@ export default {
     async handleSubmitQuery(searchObjPayload) {
       const { queryType, searchString } = searchObjPayload
       this.searchString = searchString
+      this.queryType = queryType
       try {
-        const url = '/api/users'
+        const url = `/api/${queryType}`
         const results = await this.$axios.$get(url)
-        console.log(results)
+        this.results = results.data
       } catch (e) {
         console.log(e)
       }
