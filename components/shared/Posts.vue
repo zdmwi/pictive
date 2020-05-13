@@ -12,7 +12,7 @@
       <p v-if="caption" class="text-gray-700 text-base">{{caption}}</p>
       <p v-else class="text-gray-700 text-base">{{body}}</p>
     </div>
-    <img v-if="url" class="w-full" :src="url" alt="Sunset in the mountains" />
+    <img v-if="url" class="w-full h-64" :src="url" alt="Sunset in the mountains" />
 
     <transition name="modal">
       <div class="overlay" v-if="isOpen">

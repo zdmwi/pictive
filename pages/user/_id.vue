@@ -5,11 +5,19 @@
       <UserCollection title="Friends" :collection="friends" class="mt-4" />
     </div>
     <div class="flex flex-col flex-1">
-      <PostForm />
-      <div v-for="post in posts" class="w-full h-32 bg-white shadow-sm rounded-lg mt-4"></div>
+      <PostForm class="mb-2" />
+      <Posts
+        v-for="post in posts"
+        v-bind:p_id="post.id"
+        v-bind:url="post.url"
+        v-bind:caption="post.caption"
+        v-bind:body="post.body"
+        v-bind:date="post.date"
+        :key="post.id"
+      ></Posts>
     </div>
     <div class="ml-8">
-      <Gallery title="Gallery" :images="images" />
+      <Gallery title="Gallery" :photos="photos" />
     </div>
   </div>
 </template>
@@ -19,6 +27,7 @@ import ProfileCard from '@/components/profile/ProfileCard.vue'
 import UserCollection from '@/components/profile/UserCollection.vue'
 import PostForm from '@/components/shared/PostForm.vue'
 import Gallery from '@/components/profile/Gallery.vue'
+import Posts from '@/components/shared/Posts.vue'
 
 export default {
   validate({ params }) {
@@ -28,17 +37,41 @@ export default {
     ProfileCard,
     PostForm,
     Gallery,
-    UserCollection
+    UserCollection,
+    Posts
+  },
+  async created() {
+    const { id } = this.$route.params
+
+    const userUrl = `/api/users/${id}`
+    const profileUrl = `/api/users/${id}/profile`
+    const friendsUrl = `/api/users/${id}/friends`
+    const photosUrl = `/api/users/${id}/photos`
+    const postsUrl = `/api/users/${id}/posts`
+
+    const userResult = await this.$axios.$get(userUrl)
+    const postsResult = await this.$axios.$get(postsUrl)
+    const profileResult = await this.$axios.$get(profileUrl)
+    const friendsResult = await this.$axios.$get(friendsUrl)
+    const photosResult = await this.$axios.$get(photosUrl)
+
+    this.posts = postsResult.data
+    this.photos = photosResult.data
+    this.friends = friendsResult.data
+    this.photos = photosResult.data
+
+    const { fname, lname } = userResult.data[0]
+    this.identity = {
+      displayName: `${fname} ${lname}`,
+      status: profileResult.data[0].status
+    }
   },
   data() {
     return {
-      friends: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      images: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      posts: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      identity: {
-        displayName: 'John Doe',
-        metadata: 'Joined May 4th, 2020'
-      }
+      friends: [],
+      photos: [],
+      posts: [],
+      identity: {}
     }
   }
 }
