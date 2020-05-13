@@ -58,7 +58,6 @@ router.get('/users/:id', (req, res) => {
 // get a user's friends
 router.get('/users/:id/friends', (req, res) => {
   const { id } = req.params
-  console.log('The id is ', id)
 
   // const sql = `select u.fname, u.lname, u.user_id, u.email, f.group_t as friend_group from users as u join friend_of as f on u.user_id = f.friend_id where f.user_id=${id} `
   const sql = `call friendinfo(${id})`
@@ -220,6 +219,7 @@ router.get('/users/:id/profile', (req, res) => {
   })
 })
 
+// get the groups a user created
 router.get('/users/:id/groups', (req, res) => {
   const { id } = req.params
 
@@ -233,6 +233,7 @@ router.get('/users/:id/groups', (req, res) => {
   })
 })
 
+// login
 router.post('/login', (req, res) => {
   const {email, password} = req.body;
   const sql = `select * from users where email='${email}'`
@@ -248,10 +249,33 @@ router.post('/login', (req, res) => {
       }
     }
     return res.json({code: -1, data: {}})
-
-
   })
 })
+
+// feed
+router.get('/users/:id/home', (req, res) => {
+  const { id } = req.params
+  let finalResult = [];
+
+  // const sql = `select p.url, p.caption, p.post_id, po.created_on from photos as p join posts as po on p.post_id = po.post_id where po.user_id=${id} `
+  let sql  = `select * from photos join posts on photos.post_id=posts.post_id where posts.user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id=1)`
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    finalResult = finalResult.concat(results);
+  });
+
+  sql = `select * from texts join posts on texts.post_id=posts.post_id where posts.user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id=1)`
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    finalResult = finalResult.concat(results)
+    return res.json({
+        code: 1,
+        data: finalResult
+      })
+    })
+  })
+
 
 export default {
   path: '/api',
