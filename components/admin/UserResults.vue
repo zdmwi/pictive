@@ -11,13 +11,9 @@
       <button
         class="flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out shadow-md mb-4"
         @click="unfocusUser"
-      >Go Back To Results</button>
+      >{{ previousBtnText }}</button>
       <h1 class="text-lg font-bold text-gray-800">{{ focusedUser.lname }}, {{ focusedUser.fname }}</h1>
-      <img
-        v-if="focusedUser.profile"
-        class="w-32 h-32 my-2"
-        :src="focusedUser.profile.profile_photo"
-      />
+      <img class="w-32 h-32 my-2" :src="focusedUser.profile_photo" />
       <div class="flex flex-col">
         <h1 class="font-bold">They are friends with:</h1>
         <div class="flex flex-wrap">
@@ -41,27 +37,44 @@ export default {
   props: {
     users: Array
   },
+  computed: {
+    previousBtnText() {
+      const lastUser = this.previousUsers[this.previousUsers.length - 1]
+      if (lastUser !== null) {
+        return `Back to ${lastUser.lname}, ${lastUser.fname}`
+      }
+      return 'Go back to results'
+    }
+  },
   data() {
     return {
-      focusedUser: null
+      focusedUser: null,
+      previousUsers: []
     }
   },
   methods: {
     async focusUser(user) {
       try {
-        this.focusedUser = user
         const profileUrl = `/api/users/${user.user_id}/profile`
         const friendsUrl = `/api/users/${user.user_id}/friends`
-        // const postsUrl = `/api/users/${user.user_id}/posts`
+        const textPostsUrl = `/api/users/${user.user_id}/texts`
+        const photoPostsUrl = `/api/users/${user.user_id}/photos`
 
         const profileResult = await this.$axios.$get(profileUrl)
         const friendsResult = await this.$axios.$get(friendsUrl)
-        // const postsResult = await this.$axios.$get(postsUrl)
+        const postsResult = await this.$axios.$get(textPostsUrl)
+        const photosResult = await this.$axios.$get(photoPostsUrl)
 
-        this.focusedUser.profile = profileResult.data[0]
-        this.focusedUser.friends = friendsResult.data
+        this.previousUsers.push(this.focusedUser)
+        this.focusedUser = {
+          ...user,
+          ...profileResult.data[0],
+          friends: friendsResult.data
+        }
 
         console.log(this.focusedUser)
+
+        console.log(postsResult, photosResult)
       } catch (e) {
         console.log(e)
       }
@@ -69,14 +82,32 @@ export default {
 
     async focusFriend(friend) {
       try {
-        console.log(friend)
+        const url = `/api/users/${friend.user_id}`
+        const profileUrl = `/api/users/${friend.user_id}/profile`
+        const friendsUrl = `/api/users/${friend.user_id}/friends`
+        const textPostsUrl = `/api/users/${friend.user_id}/texts`
+        const photoPostsUrl = `/api/users/${friend.user_id}/photos`
+
+        const userResult = await this.$axios.$get(url)
+        const profileResult = await this.$axios.$get(profileUrl)
+        const friendsResult = await this.$axios.$get(friendsUrl)
+        const postsResult = await this.$axios.$get(textPostsUrl)
+        const photosResult = await this.$axios.$get(photoPostsUrl)
+
+        this.previousUsers.push(this.focusedUser)
+        this.focusedUser = {
+          ...userResult.data[0],
+          ...profileResult.data[0],
+          friends: friendsResult.data
+        }
       } catch (e) {
         console.log(e)
       }
     },
 
     unfocusUser() {
-      this.focusedUser = null
+      const last = this.previousUsers.pop()
+      this.focusedUser = last
     }
   }
 }
