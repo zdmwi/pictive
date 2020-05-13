@@ -100,15 +100,6 @@ create table joined_group(
 );
 
 
-create table makes(
-	user_id int,
-	post_id int,
-	primary key(user_id,post_id),
-	foreign key(user_id) references users(user_id) on delete cascade,
-	foreign key(post_id) references posts(post_id) on delete cascade
-);
-
-
 create table posts_made(
 	post_id int,
 	user_id int,
