@@ -29,9 +29,24 @@ router.use((req, res, next) => {
   next()
 })
 
+// get all users
 router.get('/users', (req, res) => {
   const sql = 'select * from users '
-  connection.query(sql, (error, results, fields) => {
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
+// get users by id
+router.get('/users/:id', (req, res) => {
+  const { id } = req.params;
+
+  const sql = 'select * from users where user_id=?';
+  connection.query(sql, [id], (error, results) => {
     if (error) throw error
     return res.json({
       code: 1,
@@ -170,7 +185,7 @@ router.get('/posts/:id/comments', (req, res) => {
 router.get('/users/:id/profile', (req, res) => {
   const { id } = req.params
 
-  const sql = `select * from profile where user_id=${id} `
+  const sql = `select * from profile where user_id=${id}`
 
   connection.query(sql, (error, results) => {
     if (error) throw error
@@ -181,8 +196,11 @@ router.get('/users/:id/profile', (req, res) => {
   })
 })
 
-router.get('/groups', (req, res) => {
-  connection.query(sql, (error, results) => {
+router.get('/users/:id/groups', (req, res) => {
+  const { id } = req.params
+
+  const sql = 'select * from `groups` where user_id=?'
+  connection.query(sql, [id],(error, results) => {
     if (error) throw error
     return res.json({
       code: 1,
@@ -192,9 +210,22 @@ router.get('/groups', (req, res) => {
 })
 
 router.post('/login', (req, res) => {
-  // connec
-  return res.json({
-    data: 'it works'
+  const {email, password} = req.body;
+  const sql = `select * from users where email='${email}'`
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+
+    if (results.length === 1) {
+      if (results[0].password === password) {
+        return res.json({
+          code: 1,
+          data :{...results[0], user_type: 'reg'}
+        })
+      }
+    }
+    return res.json({code: -1, data: {}})
+
+
   })
 })
 
