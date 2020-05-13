@@ -41,6 +41,10 @@ export default {
     PostForm,
     Posts
   },
+  async created() {
+    const result = await this.$axios.$get(`/api/users/${this.$route.params.id}`)
+    console.log(result.data)
+  },
   computed: {
     userPosts: function() {
       this.posts.sort((a, b) => b.id - a.id)
