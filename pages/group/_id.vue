@@ -9,7 +9,7 @@
       <div v-for="post in posts" class="w-full h-32 bg-white shadow-sm rounded-lg mt-4"></div>
     </div>
     <div class="ml-8">
-      <Gallery title="Group Photos" :images="profileImages" />
+      <Gallery title="Group Photos" :photos="profilePhotos" />
     </div>
   </div>
 </template>
@@ -18,10 +18,9 @@
 import ProfileCard from '@/components/profile/ProfileCard.vue'
 import UserCollection from '@/components/profile/UserCollection.vue'
 import PostForm from '@/components/shared/PostForm.vue'
-import Gallery from '@/components/shared/Gallery.vue'
+import Gallery from '@/components/profile/Gallery.vue'
 
 export default {
-  layout: 'profile',
   validate({ params }) {
     return /^\d+/.test(params.id)
   },

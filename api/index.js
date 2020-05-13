@@ -193,6 +193,9 @@ router.get('/groups', (req, res) => {
 
 router.post('/login', (req, res) => {
   // connec
+  return res.json({
+    data: 'it works'
+  })
 })
 
 export default {
