@@ -11,7 +11,7 @@
       <button
         class="flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out shadow-md mb-4"
         @click="unfocusUser"
-      >Go Back To Results</button>
+      >{{ previousBtnText }}</button>
       <h1 class="text-lg font-bold text-gray-800">{{ focusedUser.lname }}, {{ focusedUser.fname }}</h1>
       <img class="w-32 h-32 my-2" :src="focusedUser.profile_photo" />
       <div class="flex flex-col">
@@ -37,9 +37,19 @@ export default {
   props: {
     users: Array
   },
+  computed: {
+    previousBtnText() {
+      const lastUser = this.previousUsers[this.previousUsers.length - 1]
+      if (lastUser !== null) {
+        return `Back to ${lastUser.lname}, ${lastUser.fname}`
+      }
+      return 'Go back to results'
+    }
+  },
   data() {
     return {
-      focusedUser: null
+      focusedUser: null,
+      previousUsers: []
     }
   },
   methods: {
@@ -55,6 +65,7 @@ export default {
         const postsResult = await this.$axios.$get(textPostsUrl)
         const photosResult = await this.$axios.$get(photoPostsUrl)
 
+        this.previousUsers.push(this.focusedUser)
         this.focusedUser = {
           ...user,
           ...profileResult.data[0],
@@ -83,6 +94,7 @@ export default {
         const postsResult = await this.$axios.$get(textPostsUrl)
         const photosResult = await this.$axios.$get(photoPostsUrl)
 
+        this.previousUsers.push(this.focusedUser)
         this.focusedUser = {
           ...userResult.data[0],
           ...profileResult.data[0],
@@ -94,7 +106,8 @@ export default {
     },
 
     unfocusUser() {
-      this.focusedUser = null
+      const last = this.previousUsers.pop()
+      this.focusedUser = last
     }
   }
 }
