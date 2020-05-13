@@ -16,10 +16,12 @@ create table users(
 	fname varchar(20) not null,
 	lname varchar(30) not null,
 	password varchar(20) not null,
-	email varchar(50) not null,
+	email varchar(50) not null unique,
 
 	primary key(user_id)
 );
+
+
 
 
 /* Weak Entities*/
