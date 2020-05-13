@@ -1,15 +1,16 @@
 <template>
-  <div class="shadow-md h-auto w-64 p-4 bg-white rounded-lg mr-8">
-    <div
-      v-for="item in ['Home', 2, 3, 4, 5]"
+  <div class="shadow-md h-64 w-64 p-4 bg-white rounded-lg mr-8">
+    <nuxt-link
+      to="/home"
+      v-for="item in ['Home']"
       :key="item"
-      class="flex justify-start items-center pt-4 mb-2"
+      class="flex justify-start items-center p-2 mb-2 hover:bg-gray-200 rounded-lg"
     >
       <div class="bg-gray-300 h-8 w-8 rounded-full cursor-pointer"></div>
       <div>
         <span class="block text-gray-800 text-sm font-bold pl-3">{{item}}</span>
       </div>
-    </div>
+    </nuxt-link>
   </div>
 </template>
 
