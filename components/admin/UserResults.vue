@@ -13,11 +13,7 @@
         @click="unfocusUser"
       >Go Back To Results</button>
       <h1 class="text-lg font-bold text-gray-800">{{ focusedUser.lname }}, {{ focusedUser.fname }}</h1>
-      <img
-        v-if="focusedUser.profile"
-        class="w-32 h-32 my-2"
-        :src="focusedUser.profile.profile_photo"
-      />
+      <img class="w-32 h-32 my-2" :src="focusedUser.profile_photo" />
       <div class="flex flex-col">
         <h1 class="font-bold">They are friends with:</h1>
         <div class="flex flex-wrap">
@@ -49,19 +45,25 @@ export default {
   methods: {
     async focusUser(user) {
       try {
-        this.focusedUser = user
         const profileUrl = `/api/users/${user.user_id}/profile`
         const friendsUrl = `/api/users/${user.user_id}/friends`
-        // const postsUrl = `/api/users/${user.user_id}/posts`
+        const textPostsUrl = `/api/users/${user.user_id}/texts`
+        const photoPostsUrl = `/api/users/${user.user_id}/photos`
 
         const profileResult = await this.$axios.$get(profileUrl)
         const friendsResult = await this.$axios.$get(friendsUrl)
-        // const postsResult = await this.$axios.$get(postsUrl)
+        const postsResult = await this.$axios.$get(textPostsUrl)
+        const photosResult = await this.$axios.$get(photoPostsUrl)
 
-        this.focusedUser.profile = profileResult.data[0]
-        this.focusedUser.friends = friendsResult.data
+        this.focusedUser = {
+          ...user,
+          ...profileResult.data[0],
+          friends: friendsResult.data
+        }
 
         console.log(this.focusedUser)
+
+        console.log(postsResult, photosResult)
       } catch (e) {
         console.log(e)
       }
