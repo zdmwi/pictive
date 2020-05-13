@@ -24,6 +24,7 @@
         <button
           class="bg-indigo-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="button"
+          @click="handleLoginQuery()"
         >Sign In</button>
       </div>
     </form>
@@ -32,7 +33,32 @@
 </template>
 
 <script>
-export default {}
+export default {
+  layout: 'login',
+  data() {
+    return {
+      username: '',
+      password: '',
+      results: null
+    }
+  },
+  methods: {
+    async handleLoginQuery() {
+      const { username } = this.username
+      const { password } = this.password
+      try {
+        const url = '/api/login'
+        this.results = this.$axios.$post(url, {
+          username: username,
+          password: password
+        })
+        console.log(results)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  }
+}
 </script>
 
 <style>
