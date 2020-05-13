@@ -300,7 +300,7 @@ create procedure leaveComment(uid int,pid int,comment varchar(250))
 
 create procedure viewComments(pid int)
 	BEGIN
-		SELECT user_id,comment FROM comments_on WHERE post_id = pid;
+		SELECT user_id,comment, c_date FROM comments_on WHERE post_id = pid;
 	END $$
 
 create procedure deleteComments(pid int,uid int)
