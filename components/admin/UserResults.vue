@@ -28,8 +28,8 @@
         <h1 class="font-bold my-2">Recent Posts:</h1>
         <div class="flex flex-col">
           <div v-for="post in focusedUser.posts" class="flex h-24 shadow-md bg-white mb-4">
-            <img class="h-24 w-24" :src="post.url" />
-            <div class="flex flex-col p-4">{{ post.caption }}</div>
+            <img v-if="post.url !== undefined" class="h-24 w-24" :src="post.url" />
+            <div class="flex flex-col p-4">{{ getPostContent(post) }}</div>
           </div>
         </div>
       </div>
@@ -61,7 +61,9 @@ export default {
     filteredUsers() {
       if (this.searchString) {
         return this.users.filter(user =>
-          `${user.fname} ${user.lname}`.includes(this.searchString)
+          `${user.fname} ${user.lname}`
+            .toLowerCase()
+            .includes(this.searchString.toLowerCase())
         )
       }
       return this.users
@@ -81,6 +83,12 @@ export default {
     }
   },
   methods: {
+    getPostContent(post) {
+      if (post.url !== undefined) {
+        return post.caption
+      }
+      return post.body
+    },
     formatDate(date) {
       return formatRelative(new Date(date), new Date())
     },
