@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col rounded-lg bg-white h-auto w-2/4 overflow-hidden shadow-lg mb-4 cursor-pointer"
+    class="flex flex-col rounded-lg bg-white custom-height w-1/2 overflow-y-scroll shadow-lg mb-4 cursor-pointer"
     @click="isOpen=!isOpen;"
   >
     <div class="flex justify-start px-6 pt-4">
@@ -12,12 +12,12 @@
       <p v-if="caption" class="text-gray-700 text-base">{{caption}}</p>
       <p v-else class="text-gray-700 text-base">{{body}}</p>
     </div>
-    <img v-if="url" class="w-full" :src="url" alt="Sunset in the mountains" />
+    <img v-if="url" class="w-full h-64" :src="url" alt="Sunset in the mountains" />
     <div class="font-bold text-base my-2 px-6">Comments</div>
     <div
       v-for="comment in userCmmt.slice(0,3)"
       :key="comment.id"
-      class="bg-gray-100 rounded-lg overflow-hidden shadow mx-4 mb-2 pb-2"
+      class="bg-gray-100 rounded-lg overflow-hidden shadow mx-4 mb-2 pb-2 overflow-y-scroll"
     >
       <div class="flex justify-start px-6 py-4">
         <div class="inline-block bg-gray-300 h-8 w-8 rounded-full cursor-pointer"></div>
@@ -79,3 +79,8 @@ export default {
   }
 }
 </script>
+<style>
+.custom-height {
+  height: 600px;
+}
+</style>

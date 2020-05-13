@@ -1,7 +1,7 @@
 <template>
   <div class="flex shadow-md justify-between items-center p-4 bg-white">
     <div class="flex items-center">
-      <h1 class="text-lg font-bold text-gray-800 mr-4">relatable.</h1>
+      <nuxt-link to="/home" class="text-lg font-bold text-gray-800 mr-4">relatable.</nuxt-link>
       <form @submit.prevent="handleSubmitQuery">
         <input
           v-model="searchString"
@@ -11,7 +11,7 @@
         />
       </form>
     </div>
-    <div class="flex bg-gray-300 h-8 w-8 rounded-full cursor-pointer"></div>
+    <nuxt-link to="/user/1" class="flex bg-gray-300 h-8 w-8 rounded-full cursor-pointer"></nuxt-link>
   </div>
 </template>
 
@@ -31,5 +31,4 @@ export default {
 </script>
 
 <style>
-
 </style>
