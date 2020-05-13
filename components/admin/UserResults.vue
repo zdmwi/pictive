@@ -71,7 +71,23 @@ export default {
 
     async focusFriend(friend) {
       try {
-        console.log(friend)
+        const url = `/api/users/${friend.user_id}`
+        const profileUrl = `/api/users/${friend.user_id}/profile`
+        const friendsUrl = `/api/users/${friend.user_id}/friends`
+        const textPostsUrl = `/api/users/${friend.user_id}/texts`
+        const photoPostsUrl = `/api/users/${friend.user_id}/photos`
+
+        const userResult = await this.$axios.$get(url)
+        const profileResult = await this.$axios.$get(profileUrl)
+        const friendsResult = await this.$axios.$get(friendsUrl)
+        const postsResult = await this.$axios.$get(textPostsUrl)
+        const photosResult = await this.$axios.$get(photoPostsUrl)
+
+        this.focusedUser = {
+          ...userResult.data[0],
+          ...profileResult.data[0],
+          friends: friendsResult.data
+        }
       } catch (e) {
         console.log(e)
       }
