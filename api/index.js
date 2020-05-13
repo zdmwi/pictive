@@ -29,9 +29,24 @@ router.use((req, res, next) => {
   next()
 })
 
+// get all users
 router.get('/users', (req, res) => {
   const sql = 'select * from users '
-  connection.query(sql, (error, results, fields) => {
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
+// get users by id
+router.get('/users/:id', (req, res) => {
+  const { id } = req.params;
+
+  const sql = 'select * from users where user_id=?';
+  connection.query(sql, [id], (error, results) => {
     if (error) throw error
     return res.json({
       code: 1,
