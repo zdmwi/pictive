@@ -255,18 +255,27 @@ router.post('/login', (req, res) => {
 // feed
 router.get('/users/:id/home', (req, res) => {
   const { id } = req.params
+  let finalResult = [];
 
   // const sql = `select p.url, p.caption, p.post_id, po.created_on from photos as p join posts as po on p.post_id = po.post_id where po.user_id=${id} `
-  const sql  = `select * from photos join posts on photos.post_id=posts.post_id where posts.user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id=${id})`
+  let sql  = `select * from photos join posts on photos.post_id=posts.post_id where posts.user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id=1)`
 
   connection.query(sql, (error, results) => {
     if (error) throw error
+    finalResult = finalResult.concat(results);
+  });
+
+  sql = `select * from texts join posts on texts.post_id=posts.post_id where posts.user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id=1)`
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    finalResult = finalResult.concat(results)
     return res.json({
-      code: 1,
-      data: results
+        code: 1,
+        data: finalResult
+      })
     })
   })
-})
+
 
 export default {
   path: '/api',
