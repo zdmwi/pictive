@@ -280,18 +280,17 @@ router.get('/users/:id/home', (req, res) => {
   const { id } = req.params
   let finalResult = []
 
-  // const sql = `select p.url, p.caption, p.post_id, po.created_on from photos as p join posts as po on p.post_id = po.post_id where po.user_id=${id} `
-  let sql = `select * from photos join posts on photos.post_id=posts.post_id where posts.user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id=1)`
+  let sql = `call getFriendPhotos(${id})`
 
   connection.query(sql, (error, results) => {
     if (error) throw error
-    finalResult = finalResult.concat(results)
+    finalResult = finalResult.concat(results[0])
   })
 
-  sql = `select * from texts join posts on texts.post_id=posts.post_id where posts.user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id=1)`
+  sql = `call getFriendTexts(${id})`
   connection.query(sql, (error, results) => {
     if (error) throw error
-    finalResult = finalResult.concat(results)
+    finalResult = finalResult.concat(results[0])
     return res.json({
       code: 1,
       data: finalResult
