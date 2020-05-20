@@ -5,6 +5,8 @@
       <PostForm class="mb-4" />
       <Posts
         v-for="post in posts"
+        v-bind:fname="post.fname"
+        v-bind:lname="post.lname"
         v-bind:p_id="post.id"
         v-bind:url="post.url"
         v-bind:caption="post.caption"
