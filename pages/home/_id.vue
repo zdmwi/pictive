@@ -40,18 +40,20 @@ export default {
     SideNav
   },
   async created() {
-    const postsResults = await this.$axios.$get(
-      `/api/users/${this.$route.params.id}/home`
-    )
+    if (this.$route.params.id) {
+      const postsResults = await this.$axios.$get(
+        `/api/users/${this.$route.params.id}/home`
+      )
 
-    const groupsResults = await this.$axios.$get(
-      `/api/users/${this.$route.params.id}/groups`
-    )
+      const groupsResults = await this.$axios.$get(
+        `/api/users/${this.$route.params.id}/groups`
+      )
 
-    this.posts = postsResults.data
-    this.groups = groupsResults.data
+      this.posts = postsResults.data
+      this.groups = groupsResults.data
 
-    console.log(postsResults, groupsResults)
+      console.log(postsResults, groupsResults)
+    }  
   },
   data() {
     return {

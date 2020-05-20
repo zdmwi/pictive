@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 const connection = mysql.createConnection({
   host: process.env.MYSQL_HOST || 'localhost',
   user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || '0000',
+  password: process.env.MYSQL_PASSWORD || '',
   port: '3306',
   database: process.env.MYSQL_DB || 'relatable',
   multipleStatements: true
@@ -223,7 +223,7 @@ router.get('/users/:id/profile', (req, res) => {
 router.get('/users/:id/groups', (req, res) => {
   const { id } = req.params
 
-  const sql = 'select * from `groups` where user_id=?'
+  const sql = 'select * from user_groups where user_id=?'
   connection.query(sql, [id],(error, results) => {
     if (error) throw error
     return res.json({

@@ -57,7 +57,7 @@ create table texts(
 );
 
 
-create table `groups`(
+create table user_groups(
 	group_id int not null AUTO_INCREMENT,
 	user_id int,
 	name varchar(50) not null,
@@ -94,7 +94,7 @@ create table joined_group(
 	role varchar(15) not null,
 	primary key(user_id,group_id),
 	foreign key(user_id) references users(user_id) on delete cascade,
-	foreign key(group_id) references `groups`(group_id) on delete cascade
+	foreign key(group_id) references user_groups(group_id) on delete cascade
 );
 
 
@@ -105,7 +105,7 @@ create table posts_made(
 	primary key(post_id,user_id,group_id),
 	foreign key(post_id) references posts(post_id) on delete cascade,
 	foreign key(user_id) references users(user_id) on delete cascade,
-	foreign key(group_id) references `groups`(group_id) on delete cascade
+	foreign key(group_id) references user_groups(group_id) on delete cascade
 );
 
 
@@ -114,7 +114,7 @@ create table creates(
 	group_id int,
 	primary key(user_id,group_id),
 	foreign key(user_id) references users(user_id) on delete cascade,
-	foreign key(group_id) references `groups`(group_id) on delete cascade
+	foreign key(group_id) references user_groups(group_id) on delete cascade
 );
 
 
@@ -249,7 +249,7 @@ DELIMITER $$
 
 create procedure makeGroup(uid int, gname varchar(50))
 	BEGIN
-		insert into `groups`(user_id,name) values(uid,gname);
+		insert into user_groups(user_id,name) values(uid,gname);
 		insert into joined_group values(uid,LAST_INSERT_ID(),"editor");
 	END $$
 
@@ -264,7 +264,7 @@ create procedure changeRole(creator int,uid int, gid int)
 	BEGIN
 		update joined_group
 		set role = CASE
-		when (role = "viewer" and creator = (SELECT user_id FROM `groups` WHERE group_id = gid)) then "editor"
+		when (role = "viewer" and creator = (SELECT user_id FROM user_groups WHERE group_id = gid)) then "editor"
 		else role
 		end
 		where joined_group.user_id = uid;
