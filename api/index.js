@@ -31,12 +31,20 @@ router.use((req, res, next) => {
 
 // get all users
 router.get('/users', (req, res) => {
-  const sql = 'select * from users '
+  const { start, limit } = req.query;
+
+  const startIndex = (start - 1) * limit
+  const endIndex = start * limit
+
+
+  const sql = 'select * from users'
   connection.query(sql, (error, results) => {
     if (error) throw error
+    const paginated = results.slice(startIndex, endIndex)
+    console.log(paginated)
     return res.json({
       code: 1,
-      data: results
+      data: paginated
     })
   })
 })
