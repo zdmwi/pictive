@@ -305,3 +305,32 @@ create procedure deleteComment(cid int)
 	END $$
 
 DELIMITER ;
+
+/* Prcedure for fetching user's friends posts */
+DELIMITER $$
+/* Procedure to fetch the photo posts of a user's friends */
+create PROCEDURE getFriendPhotos(uid int)
+  BEGIN
+    select p.*, u.fname, u.lname
+    from users u join (
+      select ph.*, po.user_id, po.created_on
+      from photos ph join posts po on ph.post_id=po.post_id
+      where po.user_id in (
+        SELECT friend_id FROM friend_of WHERE friend_of.user_id=uid
+      )
+    ) as p on p.user_id=u.user_id;
+  END $$
+
+create PROCEDURE getFriendTexts(uid int)
+  BEGIN
+    select p.*, u.fname, u.lname
+    from users u join (
+      select t.body, po.*
+      from texts t join posts po on t.post_id=po.post_id
+      where po.user_id in (
+        SELECT friend_id FROM friend_of WHERE friend_of.user_id=uid
+      )
+    ) as p on p.user_id=u.user_id;
+  END $$
+
+DELIMITER ;
