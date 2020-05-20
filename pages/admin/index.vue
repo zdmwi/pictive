@@ -26,7 +26,7 @@ export default {
       queryType: '',
       results: null,
       start: 1,
-      limit: 5
+      limit: 20
     }
   },
   methods: {
