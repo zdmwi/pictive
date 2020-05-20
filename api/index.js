@@ -31,11 +31,11 @@ router.use((req, res, next) => {
 
 // get all users
 router.get('/users', (req, res) => {
-  const { start, limit } = req.query;
+  const { start, limit } = req.query
 
+  console.log(start, limit)
   const startIndex = (start - 1) * limit
   const endIndex = start * limit
-
 
   const sql = 'select * from users'
   connection.query(sql, (error, results) => {

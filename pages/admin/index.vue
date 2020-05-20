@@ -1,7 +1,12 @@
 <template>
   <div class="flex h-full w-full">
     <ControlPanel @submit-query="handleSubmitQuery" @replay-submit-query="handleReplaySubmitQuery" />
-    <ResultsPanel :queryType="queryType" :searchString="searchString" :results="results" />
+    <ResultsPanel
+      @see-more="handleSeeMore"
+      :queryType="queryType"
+      :searchString="searchString"
+      :results="results"
+    />
   </div>
 </template>
 
@@ -19,7 +24,9 @@ export default {
     return {
       searchString: '',
       queryType: '',
-      results: null
+      results: null,
+      start: 1,
+      limit: 5
     }
   },
   methods: {
@@ -28,9 +35,23 @@ export default {
       this.searchString = searchString
       this.queryType = queryType
       try {
-        const url = `/api/${queryType}`
+        const url = `/api/${queryType}?start=${this.start}&limit=${this.limit}`
         const results = await this.$axios.$get(url)
         this.results = results.data
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    async handleSeeMore(searchObjPayload) {
+      this.start += this.limit
+      const { queryType, searchString } = searchObjPayload
+      this.searchString = searchString
+      this.queryType = queryType
+      try {
+        const url = `/api/${queryType}?start=${this.start}&limit=${this.limit}`
+        const results = await this.$axios.$get(url)
+        this.results = [...this.results, ...results.data]
       } catch (e) {
         console.log(e)
       }
