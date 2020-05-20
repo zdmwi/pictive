@@ -56,7 +56,7 @@ export default {
           })
           this.$router.push(
             { path: '/home' },
-            { params: { id: results.data[0].id } }
+            { params: { id: results.data.user_id } }
           )
         }
       } catch (e) {

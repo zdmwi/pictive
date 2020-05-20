@@ -241,13 +241,14 @@ router.get('/users/:id/groups', (req, res) => {
   })
 })
 
-router.get('/users/:id/avaialable_groups', (req, res) => {
+router.get('/users/:id/available_groups', (req, res) => {
   const { id } = req.params
 
   const sql =
-    'select *, count(*) as num_members from `groups` where user_id in (select friend_id from friend_of where user_id=?);'
+    'select *, count(*) as num_members from `groups` where user_id in (select friend_id from friend_of where user_id=?)'
   connection.query(sql, [id], (error, results) => {
     if (error) throw error
+    console.log(results)
     return res.json({
       code: 1,
       data: results
