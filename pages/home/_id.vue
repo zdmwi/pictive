@@ -16,7 +16,7 @@
       ></Posts>
     </div>
     <div class="shadow-md h-64 w-64 p-4 bg-white rounded-lg ml-8">
-      <h5 class="text-gray-800 text-base font-bold">Popular Groups</h5>
+      <h5 class="text-gray-800 text-base font-bold">User's Groups</h5>
       <div v-for="group in groups" :key="group" class="flex justify-start pt-4 mb-2">
         <div class="bg-gray-300 h-8 w-8 rounded-full cursor-pointer"></div>
         <div>
