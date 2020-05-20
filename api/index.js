@@ -31,11 +31,11 @@ router.use((req, res, next) => {
 
 // get all users
 router.get('/users', (req, res) => {
-  const { start, limit } = req.query;
+  const { start, limit } = req.query
 
+  console.log(start, limit)
   const startIndex = (start - 1) * limit
   const endIndex = start * limit
-
 
   const sql = 'select * from users'
   connection.query(sql, (error, results) => {
@@ -51,9 +51,9 @@ router.get('/users', (req, res) => {
 
 // get users by id
 router.get('/users/:id', (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
-  const sql = 'select * from users where user_id=?';
+  const sql = 'select * from users where user_id=?'
   connection.query(sql, [id], (error, results) => {
     if (error) throw error
     return res.json({
@@ -83,20 +83,20 @@ router.get('/users/:id/friends', (req, res) => {
 // get a users posts
 router.get('/users/:id/posts', (req, res) => {
   const { id } = req.params
-  let finalResult = [];
+  let finalResult = []
   let sql = `select p.url, p.caption, p.post_id, po.created_on from photos as p join posts as po on p.post_id = po.post_id where po.user_id=${id} `
 
   connection.query(sql, (error, results) => {
     if (error) throw error
-    finalResult = finalResult.concat(results);
-  });
+    finalResult = finalResult.concat(results)
+  })
 
   sql = `select t.body, t.post_id, po.created_on from texts as t join posts as po on t.post_id = po.post_id where po.user_id=${id} `
 
   connection.query(sql, (error, results) => {
     if (error) throw error
 
-    finalResult = finalResult.concat(results);
+    finalResult = finalResult.concat(results)
     return res.json({
       code: 1,
       data: finalResult
@@ -242,7 +242,7 @@ router.get('/users/:id/groups', (req, res) => {
 
 // login
 router.post('/login', (req, res) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body
   const sql = `select * from users where email='${email}'`
   connection.query(sql, (error, results) => {
     if (error) throw error
@@ -251,37 +251,37 @@ router.post('/login', (req, res) => {
       if (results[0].password === password) {
         return res.json({
           code: 1,
-          data :{...results[0], user_type: 'reg'}
+          data: { ...results[0], user_type: 'reg' }
         })
       }
     }
-    return res.json({code: -1, data: {}})
+    return res.json({ code: -1, data: {} })
   })
 })
 
 // feed
 router.get('/users/:id/home', (req, res) => {
   const { id } = req.params
-  let finalResult = [];
+  let finalResult = []
 
-  let sql = `call getFriendPhotos(${id})`
+  // const sql = `select p.url, p.caption, p.post_id, po.created_on from photos as p join posts as po on p.post_id = po.post_id where po.user_id=${id} `
+  let sql = `select * from photos join posts on photos.post_id=posts.post_id where posts.user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id=1)`
 
   connection.query(sql, (error, results) => {
     if (error) throw error
-    finalResult = finalResult.concat(results[0]);
-  });
-
-  sql = `call getFriendtexts(${id})`
-  connection.query(sql, (error, results) => {
-    if (error) throw error
-    finalResult = finalResult.concat(results[0])
-    return res.json({
-        code: 1,
-        data: finalResult
-      })
-    })
+    finalResult = finalResult.concat(results)
   })
 
+  sql = `select * from texts join posts on texts.post_id=posts.post_id where posts.user_id in (SELECT friend_id FROM friend_of WHERE friend_of.user_id=1)`
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    finalResult = finalResult.concat(results)
+    return res.json({
+      code: 1,
+      data: finalResult
+    })
+  })
+})
 
 export default {
   path: '/api',

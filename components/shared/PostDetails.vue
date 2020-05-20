@@ -17,7 +17,7 @@
     <div
       v-for="comment in userCmmt.slice(0,3)"
       :key="comment.id"
-      class="bg-gray-100 rounded-lg overflow-hidden shadow mx-4 mb-2 pb-2 overflow-y-scroll"
+      class="bg-gray-100 rounded-lg overflow-hidden shadow mx-4 mb-2 pb-2"
     >
       <div class="flex justify-start px-6 py-4">
         <div class="inline-block bg-gray-300 h-8 w-8 rounded-full cursor-pointer"></div>
