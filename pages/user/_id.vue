@@ -56,9 +56,14 @@ export default {
     const photosResult = await this.$axios.$get(photosUrl)
 
     this.posts = postsResult.data
-    this.photos = photosResult.data
     this.friends = friendsResult.data
     this.photos = photosResult.data
+
+    // console.log(userResult)
+    // console.log(this.photos)
+    // console.log(this.friends)
+    // console.log(this.posts)
+    // console.log(profileResult.data)
 
     const { fname, lname } = userResult.data[0]
     this.identity = {

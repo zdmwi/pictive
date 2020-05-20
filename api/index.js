@@ -215,7 +215,6 @@ router.get('/posts/:id/comments', (req, res) => {
 // get a user's profile
 router.get('/users/:id/profile', (req, res) => {
   const { id } = req.params
-
   const sql = `select * from profile where user_id=${id}`
 
   connection.query(sql, (error, results) => {
