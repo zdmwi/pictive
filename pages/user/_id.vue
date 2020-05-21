@@ -62,6 +62,7 @@ export default {
 
     const { fname, lname } = userResult.data[0]
     this.identity = {
+      id: id,
       displayName: `${fname} ${lname}`,
       status: profileResult.data[0].status
     }
