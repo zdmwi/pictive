@@ -1,10 +1,10 @@
 <template>
-  <div class="shadow-md h-64 w-64 p-4 bg-white rounded-lg mr-8">
+  <div class="shadow-md self-start h-auto w-64 p-4 bg-white rounded-lg mr-8">
     <nuxt-link
       to="/home"
       v-for="item in ['Home']"
       :key="item"
-      class="flex justify-start items-center p-2 mb-2 hover:bg-gray-200 rounded-lg"
+      class="flex justify-start items-center p-2 hover:bg-gray-200 rounded-lg"
     >
       <div class="bg-gray-300 h-8 w-8 rounded-full cursor-pointer"></div>
       <div>
