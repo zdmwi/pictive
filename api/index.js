@@ -150,6 +150,21 @@ router.post('/users/:id/texts', (req, res) => {
   })
 })
 
+// register a user
+router.post('/register', (req, res) => {
+  const { fname, lname, email, password } = req.body
+
+  const sql = `call register(?,?,?,?)`
+
+  connection.query(sql,[fname, lname, password, email], (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
 // make a photo post
 router.post('/users/:id/photos', (req, res) => {
   const { id } = req.params
