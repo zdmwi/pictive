@@ -54,14 +54,12 @@ export default {
     Posts,
     SideNav
   },
-  async created() {
-    const postsResults = await this.$axios.$get(
-      `/api/users/${this.$route.params.id}/home`
-    )
+  async mounted() {
+    const userId = localStorage.getItem('user') || 1
 
-    const groupsResults = await this.$axios.$get(
-      `/api/users/${this.$route.params.id}/groups`
-    )
+    const postsResults = await this.$axios.$get(`/api/users/${userId}/home`)
+
+    const groupsResults = await this.$axios.$get(`/api/users/${userId}/groups`)
 
     this.posts = postsResults.data
     this.groups = groupsResults.data
