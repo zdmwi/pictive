@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 const connection = mysql.createConnection({
   host: process.env.MYSQL_HOST || 'localhost',
   user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || '0000',
+  password: process.env.MYSQL_PASSWORD || 'KayonDonyece20!',
   port: '3306',
   database: process.env.MYSQL_DB || 'relatable',
   multipleStatements: true
@@ -295,7 +295,22 @@ router.get('/users/:id/home', (req, res) => {
   const { id } = req.params
   let finalResult = []
 
-  let sql = `call getFriendPhotos(${id})`
+  let sql = `select p.url, p.caption, p.post_id, po.created_on from photos as p join posts as po on p.post_id = po.post_id where po.user_id=${id} `
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    finalResult = finalResult.concat(results)
+  })
+
+  sql = `select t.body, t.post_id, po.created_on from texts as t join posts as po on t.post_id = po.post_id where po.user_id=${id} `
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+
+    finalResult = finalResult.concat(results)
+  })
+  
+  sql = `call getFriendPhotos(${id})`
 
   connection.query(sql, (error, results) => {
     if (error) throw error

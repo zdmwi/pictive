@@ -4,14 +4,14 @@
     <div class="flex flex-col flex-1">
       <PostForm class="mb-4" />
       <Posts
-        v-for="post in posts"
+        v-for="post in userPosts"
         v-bind:fname="post.fname"
         v-bind:lname="post.lname"
-        v-bind:p_id="post.id"
+        v-bind:p_id="post.post_id"
         v-bind:url="post.url"
         v-bind:caption="post.caption"
         v-bind:body="post.body"
-        v-bind:date="post.date"
+        v-bind:date="post.created_on"
         :key="post.id"
       ></Posts>
     </div>
@@ -53,6 +53,19 @@ export default {
     PostForm,
     Posts,
     SideNav
+  },
+  computed: {
+    userPosts: function () {
+      this.posts.sort((a, b) => b.post_id - a.post_id )
+      for(let i=0; i < this.posts.length; i++){
+        let post = this.posts[i];
+        let p_date = new Date(post.created_on);
+        p_date.setTime(p_date.getTime()+86400000);
+        post.created_on = p_date.toString().substring(4, 11);
+        this.posts[i] = post;
+      }
+      return this.posts
+    }
   },
   async mounted() {
     const userId = localStorage.getItem('user') || 1

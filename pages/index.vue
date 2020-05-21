@@ -55,7 +55,7 @@ export default {
             password: this.password
           })
           this.$router.push({ path: '/home' })
-          localStorage.setItem('user', results.data.id)
+          localStorage.setItem('user', results.data.user_id)
         }
       } catch (e) {
         console.log(e)
