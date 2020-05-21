@@ -59,10 +59,12 @@ export default {
     this.photos = photosResult.data
     this.friends = friendsResult.data
     this.photos = photosResult.data
-
+    console.log(profileResult)
     const { fname, lname } = userResult.data[0]
     this.identity = {
+      id: profileResult.data[0].user_id,
       displayName: `${fname} ${lname}`,
+      photo: profileResult.data[0].profile_photo,
       status: profileResult.data[0].status
     }
   },
