@@ -54,10 +54,7 @@ export default {
             email: this.email,
             password: this.password
           })
-          this.$router.push(
-            { path: '/home' },
-            { params: { id: results.data.user_id } }
-          )
+          this.$router.push({ path: '/home/1' })
         }
       } catch (e) {
         console.log(e)

@@ -1,7 +1,7 @@
 <template>
   <div class="flex shadow-md justify-between items-center p-4 bg-white">
     <div class="flex items-center">
-      <nuxt-link to="/home" class="text-lg font-bold text-gray-800 mr-4">relatable.</nuxt-link>
+      <nuxt-link to="/home/1" class="text-lg font-bold text-gray-800 mr-4">relatable.</nuxt-link>
       <form @submit.prevent="handleSubmitQuery">
         <input
           v-model="searchString"
