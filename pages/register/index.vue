@@ -68,7 +68,7 @@
     async handleRegisterQuery() {
       try {
         const url = '/api/register'
-        const results = await this.$axios.$post(url, {
+        const results = await this.$axios.post(url, {
           fname: this.fname,
           lname: this.lname,
           email: this.email,
