@@ -74,6 +74,7 @@
           email: this.email,
           password: this.password
         })
+        console.log(results)
         this.$router.push({ path: '/' })
       } catch (e) {
         console.log(e)

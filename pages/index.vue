@@ -24,9 +24,14 @@
       </div>
       <div class="flex items-center justify-around">
         <button
-          class="bg-indigo-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          class="bg-indigo-600 hover:bg-blue-700 text-white text-sm w-24 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >Sign In</button>
+        <nuxt-link to="/register">
+        <button
+          class="bg-indigo-600 hover:bg-blue-700 text-white text-sm w-24 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >Sign Up</button>
+        </nuxt-link>
       </div>
     </form>
     <p class="text-center text-gray-500 text-xs">&copy;2020 Relatable. All rights reserved.</p>

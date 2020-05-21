@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 const connection = mysql.createConnection({
   host: process.env.MYSQL_HOST || 'localhost',
   user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || '0000',
+  password: process.env.MYSQL_PASSWORD || 'KayonDonyece20!',
   port: '3306',
   database: process.env.MYSQL_DB || 'relatable',
   multipleStatements: true
@@ -197,6 +197,23 @@ router.post('/users/:id/texts', (req, res) => {
     })
   })
 })
+
+
+// register a user
+router.post('/register', (req, res) => {
+  const { fname, lname, email, password } = req.body
+
+  const sql = `call register(?,?,?,?)`
+
+  connection.query(sql, [fname, lname, password, email], (error, results) => {
+    if(error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
 
 // make a photo post
 router.post('/users/:id/photos', (req, res) => {
