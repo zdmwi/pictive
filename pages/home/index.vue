@@ -12,7 +12,7 @@
         v-bind:caption="post.caption"
         v-bind:body="post.body"
         v-bind:date="post.created_on"
-        :key="post.id"
+        :key="post.post_id"
       ></Posts>
     </div>
     <div>
@@ -64,6 +64,7 @@ export default {
         post.created_on = p_date.toString().substring(4, 11);
         this.posts[i] = post;
       }
+      console.log(this.posts[0])
       return this.posts
     }
   },
@@ -78,6 +79,7 @@ export default {
     this.groups = groupsResults.data
 
     console.log(postsResults, groupsResults)
+    console.log(this.posts[0])
   },
   data() {
     return {
