@@ -306,6 +306,51 @@ router.get('/users/:id/groups', (req, res) => {
   })
 })
 
+// get the members of a group
+router.get('/groups/:id/members', (req, res) => {
+  const { id } = req.params
+
+  const sql = `select profile_photo, user_id from profile where user_id in (select user_id from joined_group where group_id=${id})`
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
+// get a group's info
+router.get('/groups/:id/', (req, res) => {
+  const { id } = req.params
+
+  const sql = 'select * from `groups` where group_id=?'
+
+  connection.query(sql, [id], (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results[0]
+    })
+  })
+})
+
+// join a group
+router.get('/groups/:gid/users/:uid', (req, res) => {
+  const { gid, uid } = req.params
+
+  const sql = `call joinGroup(${uid},${gid})`
+
+  connection.query(sql, [uid, gid], (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results[0]
+    })
+  })
+})
+
 router.post('/users/:id/groups', (req, res) => {
   const { id } = req.params
   const { groupName } = req.body
