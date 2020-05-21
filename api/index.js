@@ -298,6 +298,23 @@ router.get('/users/:id/home', (req, res) => {
   })
 })
 
+// make a comment
+router.post('/comment/:post_id', (req, res) => {
+  const { user_id, post_id, comment } = req.params
+
+  let sql = `call leaveComment(${user_id}, ${post_id}, ${comment})`
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    else {
+      return res.json({
+        code: 1,
+        data: {}
+      })
+    }
+  })
+})
+
 export default {
   path: '/api',
   handler: router
