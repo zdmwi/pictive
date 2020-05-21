@@ -1,12 +1,12 @@
 <template>
   <div class="shadow-md h-64 w-64 p-4 bg-white flex flex-col items-center rounded-lg">
+    
     <div class="h-24 w-24 bg-gray-300 rounded-full mb-4">
-      <img :src="identity.photo" alt="profile photo">
+      <img :src="identity.photo" alt="profile photo" class="object-fill h-full w-full">
     </div>
     <h1 class="text-lg font-bold text-gray-800">{{ identity.displayName }}</h1>
     <span class="text-sm text-gray-600">{{ identity.status }}</span>
     <div class="my-5" v-if="isOwner">
-      
       <button 
         v-if="!edit"
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 

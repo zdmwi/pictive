@@ -64,7 +64,7 @@ export default {
     this.identity = {
       id: profileResult.data[0].user_id,
       displayName: `${fname} ${lname}`,
-      photo: profileResult.data[0].photo,
+      photo: profileResult.data[0].profile_photo,
       status: profileResult.data[0].status
     }
   },
