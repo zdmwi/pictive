@@ -8,11 +8,13 @@
       <PostForm v-if="isUser" class="mb-2" />
       <Posts
         v-for="post in posts"
-        v-bind:p_id="post.id"
-        v-bind:url="post.url"
-        v-bind:caption="post.caption"
-        v-bind:body="post.body"
-        v-bind:date="post.date"
+        :fname="fname"
+        :lname="lname"
+        :p_id="post.id"
+        :url="post.url"
+        :caption="post.caption"
+        :body="post.body"
+        :date="post.date"
         :key="post.id"
       ></Posts>
     </div>
@@ -61,6 +63,8 @@ export default {
     this.photos = photosResult.data
     console.log(profileResult)
     const { fname, lname } = userResult.data[0]
+    this.fname = fname
+    this.lname = lname
     this.identity = {
       id: profileResult.data[0].user_id,
       displayName: `${fname} ${lname}`,
@@ -78,7 +82,9 @@ export default {
       photos: [],
       posts: [],
       identity: {},
-      isUser: false
+      isUser: false,
+      fname: '',
+      lname: ''
     }
   }
 }
