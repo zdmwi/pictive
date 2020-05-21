@@ -109,8 +109,17 @@ export default {
     console.log(postsResults, suggestedResults.data[0], groupsResults)
   },
   methods: {
-    handleCreateGroup() {
-      console.log('creating a group')
+    async handleCreateGroup() {
+      const userId = localStorage.getItem('user') || 1
+      const groupName = window.prompt('What is the name of your new group?')
+
+      const results = await this.$axios.$post(`/api/users/${userId}/groups`, {
+        groupName
+      })
+
+      if (results) {
+        window.alert('Successfully created group!')
+      }
     },
 
     async handleAddFriend(friendId) {

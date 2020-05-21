@@ -289,6 +289,20 @@ router.get('/users/:id/groups', (req, res) => {
   })
 })
 
+router.post('/users/:id/groups', (req, res) => {
+  const { id } = req.params
+  const { groupName } = req.body
+
+  const sql = `call makeGroup(${id}, '${groupName}')`
+  connection.query(sql, [id], (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
 router.get('/users/:id/available_groups', (req, res) => {
   const { id } = req.params
 
