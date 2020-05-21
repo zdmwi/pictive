@@ -1,6 +1,8 @@
 <template>
   <div class="shadow-md h-64 w-64 p-4 bg-white flex flex-col items-center rounded-lg">
-    <div class="h-24 w-24 bg-gray-300 rounded-full mb-4"></div>
+    <div class="h-24 w-24 bg-gray-300 rounded-full mb-4">
+      <img :src="identity.photo" alt="profile photo">
+    </div>
     <h1 class="text-lg font-bold text-gray-800">{{ identity.displayName }}</h1>
     <span class="text-sm text-gray-600">{{ identity.status }}</span>
     <div class="my-5" v-if="isOwner">
@@ -66,7 +68,7 @@ export default {
       const results = await this.$axios.$post(url, {
         photo: photo
       })
-      this.identity = resuls.data[0]
+      this.identity = results.data[0]
       this.edit = !this.edit
     }
   }
