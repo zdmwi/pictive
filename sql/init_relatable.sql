@@ -220,8 +220,8 @@ DELIMITER $$
 
 create procedure friendInfo(id int)
 	BEGIN
-		select u.fname, u.lname, u.user_id, u.email, f.group_t as friend_group
-    from users as u join friend_of as f on u.user_id = f.friend_id
+		select profile.profile_photo, u.fname, u.lname, u.user_id, u.email, f.group_t as friend_group
+    from users as u join friend_of as f on u.user_id = f.friend_id join profile on profile.user_id = u.user_id
     where f.user_id=id;
 	END $$
 
