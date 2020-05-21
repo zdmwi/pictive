@@ -15,7 +15,7 @@
         :key="post.id"
       ></Posts>
     </div>
-    <div class="shadow-md h-64 w-64 p-4 bg-white rounded-lg ml-8">
+    <div v-if="groups.length>0" class="shadow-md h-64 w-64 p-4 bg-white rounded-lg ml-8">
       <h5 class="text-gray-800 text-base font-bold">User's Groups</h5>
       <div v-for="group in groups" :key="group" class="flex justify-start pt-4 mb-2">
         <div class="bg-gray-300 h-8 w-8 rounded-full cursor-pointer"></div>
@@ -23,6 +23,12 @@
           <span class="block text-gray-800 text-sm leading-none pl-3 pt-1">{{group.name}}</span>
           <span class="block text-gray-800 text-xs pl-3">Lorem ipsum dolor sit amet...</span>
         </div>
+      </div>
+    </div>
+    <div v-else class="shadow-md h-64 w-64 p-4 bg-white rounded-lg ml-8">
+      <h5 class="text-gray-800 text-base font-bold">User's Groups</h5>
+      <div class="flex justify-start pt-4 mb-2">
+        <span class="block text-gray-800 text-sm leading-none pl-3 pt-1">No groups</span>
       </div>
     </div>
   </div>
