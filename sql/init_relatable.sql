@@ -201,6 +201,18 @@ create procedure friendList(id int)
 		WHERE user_id = id;
 	END $$
 
+
+create procedure getSuggestedFriends(uid int)
+  BEGIN
+    SELECT DISTINCT profile.profile_photo, users.fname, users.lname, users.user_id
+    FROM friend_of
+    JOIN users ON friend_of.friend_id = users.user_id
+    JOIN profile ON profile.user_id = users.user_id
+    WHERE friend_of.friend_id <> uid AND friend_of.friend_id NOT IN
+      (SELECT t1.friend_id FROM
+        (SELECT * FROM friend_of WHERE user_id=uid) AS t1);
+  END $$
+
 DELIMITER ;
 
 /*Stored Procedure to return info for friend*/
@@ -208,8 +220,8 @@ DELIMITER $$
 
 create procedure friendInfo(id int)
 	BEGIN
-		select u.fname, u.lname, u.user_id, u.email, f.group_t as friend_group
-    from users as u join friend_of as f on u.user_id = f.friend_id
+		select profile.profile_photo, u.fname, u.lname, u.user_id, u.email, f.group_t as friend_group
+    from users as u join friend_of as f on u.user_id = f.friend_id join profile on profile.user_id = u.user_id
     where f.user_id=id;
 	END $$
 

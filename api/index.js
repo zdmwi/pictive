@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 const connection = mysql.createConnection({
   host: process.env.MYSQL_HOST || 'localhost',
   user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || 'KayonDonyece20!',
+  password: process.env.MYSQL_PASSWORD || '0000',
   port: '3306',
   database: process.env.MYSQL_DB || 'relatable',
   multipleStatements: true
@@ -63,6 +63,21 @@ router.get('/users/:id', (req, res) => {
   })
 })
 
+// update profile pic
+router.post('/users/:id/profile', (req, res) => {
+  const { id } = req.params
+  const { photo } = req.body
+
+  const sql = 'call modifyProfilePhoto(?,?)'
+  connection.query(sql, [id, photo], (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
 // get a user's friends
 router.get('/users/:id/friends', (req, res) => {
   const { id } = req.params
@@ -76,6 +91,39 @@ router.get('/users/:id/friends', (req, res) => {
     return res.json({
       code: 1,
       data: results[0]
+    })
+  })
+})
+
+// user adds a friend
+router.post('/users/:id/friends', (req, res) => {
+  const { id } = req.params
+  const { friendId, typeOfFriend } = req.body
+
+  const sql = `call addFriend(${id}, ${friendId}, '${typeOfFriend}')`
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    console.log(results)
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
+// get suggested friends for a user
+router.get('/users/:id/suggested_friends', (req, res) => {
+  const { id } = req.params
+
+  const sql = `call getSuggestedFriends(${id})`
+
+  connection.query(sql, (error, results) => {
+    if (error) throw error
+    console.log(results)
+    return res.json({
+      code: 1,
+      data: results
     })
   })
 })
@@ -142,21 +190,6 @@ router.post('/users/:id/texts', (req, res) => {
   const sql = `call makeTextPost(${id}, '${body}')`
 
   connection.query(sql, (error, results) => {
-    if (error) throw error
-    return res.json({
-      code: 1,
-      data: results
-    })
-  })
-})
-
-// register a user
-router.post('/register', (req, res) => {
-  const { fname, lname, email, password } = req.body
-
-  const sql = `call register(?,?,?,?)`
-
-  connection.query(sql,[fname, lname, password, email], (error, results) => {
     if (error) throw error
     return res.json({
       code: 1,
@@ -256,6 +289,20 @@ router.get('/users/:id/groups', (req, res) => {
   })
 })
 
+router.post('/users/:id/groups', (req, res) => {
+  const { id } = req.params
+  const { groupName } = req.body
+
+  const sql = `call makeGroup(${id}, '${groupName}')`
+  connection.query(sql, [id], (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
 router.get('/users/:id/available_groups', (req, res) => {
   const { id } = req.params
 
@@ -309,7 +356,7 @@ router.get('/users/:id/home', (req, res) => {
 
     finalResult = finalResult.concat(results)
   })
-  
+
   sql = `call getFriendPhotos(${id})`
 
   connection.query(sql, (error, results) => {
