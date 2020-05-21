@@ -29,7 +29,7 @@
         >Sign In</button>
       </div>
     </form>
-    <p class="text-center text-gray-500 text-xs">&copy;2020 Relatable. All rights reserved.</p>
+    <p class="text-center text-gray-500 text-xs">&copy;2020 Acme Corp. All rights reserved.</p>
   </div>
 </template>
 
@@ -54,7 +54,8 @@ export default {
             email: this.email,
             password: this.password
           })
-          this.$router.push({ path: '/home/1' })
+          this.$router.push({ path: '/home' })
+          localStorage.setItem('user', results.data.id)
         }
       } catch (e) {
         console.log(e)
