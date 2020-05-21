@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 const connection = mysql.createConnection({
   host: process.env.MYSQL_HOST || 'localhost',
   user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || '',
+  password: process.env.MYSQL_PASSWORD || '0000',
   port: '3306',
   database: process.env.MYSQL_DB || 'relatable',
   multipleStatements: true
@@ -55,6 +55,21 @@ router.get('/users/:id', (req, res) => {
 
   const sql = 'select * from users where user_id=?'
   connection.query(sql, [id], (error, results) => {
+    if (error) throw error
+    return res.json({
+      code: 1,
+      data: results
+    })
+  })
+})
+
+// update profile pic
+router.post('/users/:id/profile', (req, res) => {
+  const { id } = req.params
+  const { photo } = req.body
+
+  const sql = 'call modifyProfilePhoto(?,?)'
+  connection.query(sql, [id, photo], (error, results) => {
     if (error) throw error
     return res.json({
       code: 1,
@@ -294,7 +309,7 @@ router.get('/users/:id/home', (req, res) => {
 
     finalResult = finalResult.concat(results)
   })
-  
+
   sql = `call getFriendPhotos(${id})`
 
   connection.query(sql, (error, results) => {
