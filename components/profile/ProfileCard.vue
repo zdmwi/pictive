@@ -2,8 +2,8 @@
   <div class="shadow-md h-64 w-64 p-4 bg-white flex flex-col items-center rounded-lg">
     <div class="h-24 w-24 bg-gray-300 rounded-full mb-4"></div>
     <h1 class="text-lg font-bold text-gray-800">{{ identity.displayName }}</h1>
-    <span class="text-sm text-gray-600">{{ identity.metadata }}</span>
-    <div class="my-5">
+    <span class="text-sm text-gray-600">{{ identity.status }}</span>
+    <div class="my-5" v-if="isOwner">
       
       <button 
         v-if="!edit"
@@ -49,6 +49,12 @@ export default {
   data () {
     return {
       edit: false
+    }
+  },
+  computed: {
+    isOwner () {
+      const result = this.identity && process.browser ? parseInt(this.identity.id) == localStorage.getItem('user') : false
+      return result
     }
   },
   methods: {
